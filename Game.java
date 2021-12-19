@@ -9,39 +9,19 @@ public class Game extends Thread{
         board = _board;
     }
 
-    public ArrayList<Coordinate> getNeighbors(Board board, Coordinate coordinate) {
+    public ArrayList<Coordinate> getNeighbors(Coordinate coordinate) {
         ArrayList<Coordinate> neighbors = new ArrayList<Coordinate>();
         
-        int x = coordinate.x;
-        int y = coordinate.y;
-        
-        int start = x - 1;
-        int end = x + 1;
+        int start = coordinate.x - 1;
+        int end = coordinate.x + 1;
 
-        if (start <= 0) {
-            start = 0;
+        for (int x = start; x <= end; x++) { // top and bottom 3
+            neighbors.add(new Coordinate(x, coordinate.y + 1));
+            neighbors.add(new Coordinate(x, coordinate.y - 1));
         }
 
-        for (int _x = start; _x <= end; _x++) { // top and bottom 3
-            int _y = y + 1;
-            Coordinate _coord = new Coordinate(_x, _y);
-
-            neighbors.add(_coord);
-
-            _y = y - 1;
-            _coord = new Coordinate(_x, _y);
-
-            neighbors.add(_coord);
-        }
-
-        int _x = x - 1;
-        
-        if (_x < 0) {
-            _x = 0;
-        }
-
-        neighbors.add(new Coordinate(_x, y));
-        neighbors.add(new Coordinate(x + 1, y));
+        neighbors.add(new Coordinate(coordinate.x - 1, coordinate.y));
+        neighbors.add(new Coordinate(coordinate.x + 1, coordinate.y));
 
         return neighbors;
     }
@@ -49,7 +29,7 @@ public class Game extends Thread{
     public boolean deadCellState(Board board, Coordinate coordinate) {
         // get all alive neighbors surrounding coordinate
 
-        ArrayList<Coordinate> neighbors = getNeighbors(board, coordinate);
+        ArrayList<Coordinate> neighbors = getNeighbors(coordinate);
 
         int liveCells = 0;
 
@@ -72,7 +52,7 @@ public class Game extends Thread{
 
         int alive_neighbors = 0;
         
-        ArrayList<Coordinate> neighbors = getNeighbors(board, coordinate);
+        ArrayList<Coordinate> neighbors = getNeighbors(coordinate);
 
         for (Coordinate neighbor: neighbors) {
             // neighbor is a coordinate, x and y
@@ -106,6 +86,7 @@ public class Game extends Thread{
             ArrayList<Coordinate> cells_to_kill = new ArrayList<Coordinate>(); // kill these cells
             ArrayList<Coordinate> dead_cells_to_revive = new ArrayList<Coordinate>(); // these cells have exactly 3 neighbors, bring them back to life
 
+            // iterate through each living cell
             for (Coordinate coordinate: board.alive.keySet()){
                 boolean state = liveCellState(board, coordinate);
 
@@ -115,8 +96,9 @@ public class Game extends Thread{
                 if (state) { // cell stays alive
                     // go through each neighbor, figure out which dead one can be revived
 
-                    ArrayList<Coordinate> neighbors = getNeighbors(board, coordinate);
-
+                    ArrayList<Coordinate> neighbors = getNeighbors(coordinate);
+                    
+                    // neighbors: ArrayList of neighbors, shown in Coordinate objects
                     for (Coordinate neighbor: neighbors) {
                         
                         Button button = board.dead.get(neighbor);
@@ -126,13 +108,15 @@ public class Game extends Thread{
                             boolean revive_dead_cell = deadCellState(board, neighbor);
 
                             if (revive_dead_cell) {
+                                System.out.println("reviving " + neighbor.x + ", " + neighbor.y + "...");
                                 dead_cells_to_revive.add(neighbor);
                             }
                         }
                     }
                 }
 
-                else {
+                else { // state = false => kill cell
+                    System.out.println("Killing cell at " + coordinate.x + ", " + coordinate.y);
                     cells_to_kill.add(coordinate); // kill cell
                 }
             }
@@ -142,10 +126,18 @@ public class Game extends Thread{
                 Button button = board.alive.get(coord);
 
                 board.killCell(coord, button);
+
+                System.out.println("Killed cell at " + coord.x + ", " + coord.y);
             }
 
             for (Coordinate coord: dead_cells_to_revive) {
                 Button button = board.dead.get(coord);
+
+                System.out.println("Trying to revive dead cell " + coord.x + ", " + coord.y);
+
+                if (button == null) {
+                    System.out.println("button for " + coord.x + ", " + coord.y + " is null.");
+                }
 
                 board.createCell(coord, button);
             }

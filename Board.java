@@ -4,11 +4,8 @@ import javax.swing.*;
 import java.awt.*;
 
 import java.util.HashMap;
-import java.util.ArrayList;
 
 public class Board extends JPanel{
-    public HashMap<Coordinate, Button> data = new HashMap<>();
-
     public HashMap<Coordinate, Button> alive = new HashMap<>();
     public HashMap<Coordinate, Button> dead = new HashMap<>();
 
@@ -18,6 +15,8 @@ public class Board extends JPanel{
         this.setBackground(Color.BLACK);
         
         this.setLayout(new GridLayout(10, 10));
+
+        // ORIGIN POINT - (0, 0)
 
         for (int y = 0; y < 12; y++) {
             for (int x = 0; x < 12; x++) {
@@ -35,6 +34,10 @@ public class Board extends JPanel{
     }
 
     public void createCell(Coordinate Coordinate, Button button) {    
+        if (button == null) {
+            System.out.println("Button at coordinate " + Coordinate.x + "," + Coordinate.y + " is null");
+        }
+        
         alive.put(Coordinate, button);
         dead.remove(Coordinate);
 
@@ -48,13 +51,9 @@ public class Board extends JPanel{
         button.setBackground(Color.BLACK);
     }
 
-    public Button getButtonatCoordinate(int x, int y) {
-        Coordinate coord = new Coordinate(x, y);
-        
-        return data.get(coord);
-    }
-
     public void StartLoop(Game GAME) {
+        this.simulation_started = true;
+        
         GAME.start();
     }
 }

@@ -19,8 +19,6 @@ public class Main {
 		start.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e){
-				String msg = "";
-				
 				board.StartLoop(GAME);
 			}
 		});
