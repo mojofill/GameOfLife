@@ -11,29 +11,32 @@ public class Button extends JButton{
     public boolean lighted = false; // set true when button is colored
     
     public Button(int x, int y, Board _board) {
-        int[] Coordinate = {x, y};
+        Coordinate coordinate = new Coordinate(x, y);
         board = _board;
+
+        Button button = this;
 
         this.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                if (_board.simulation_started) {
+                    return;
+                }
+
                 if (lighted) {
                     setBackground(Color.BLACK);
 
-                    System.out.println("Set " + x + ", " + y + " as dead");
-
                     lighted = false;
+
+                    _board.killCell(coordinate, button);
                 }
                 else {
                     setBackground(Color.RED);
 
-                    System.out.println("Set " + x + ", " + y + " as alive");
-
                     lighted = true;
+                    _board.createCell(coordinate, button);
                 }
             }
         });
-
-        board.createCell(Coordinate, this);
     }
 }

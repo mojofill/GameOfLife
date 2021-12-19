@@ -21,15 +21,6 @@ public class Main {
 			public void actionPerformed(ActionEvent e){
 				String msg = "";
 				
-				for (int[] coord: board.alive.keySet()) {
-					int x = coord[0];
-					int y = coord[1];
-
-					msg = msg + Integer.toString(x) + ", " + Integer.toString(y) + " is alive\n";
-				}
-
-				System.out.println(msg);
-				
 				board.StartLoop(GAME);
 			}
 		});
