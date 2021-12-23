@@ -27,11 +27,11 @@ public class Main {
 		
 		window.add(start, BorderLayout.LINE_END);
 		
-		window.setSize(new Dimension(800, 600));
+		window.setSize(new Dimension(900, 600));
 		
 		window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
-		board.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
+		board.setLayout(new FlowLayout(FlowLayout.CENTER, 0, 0));
 		
 		window.add(board, BorderLayout.CENTER);
 		

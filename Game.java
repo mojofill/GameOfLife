@@ -80,11 +80,11 @@ public class Game extends Thread{
     @Override
     public void run(){
         while (true) {
-            try {Thread.sleep(800);}
+            try {Thread.sleep(400);}
             catch (Exception e) {}
 
-            ArrayList<Coordinate> cells_to_kill = new ArrayList<Coordinate>(); // kill these cells
-            ArrayList<Coordinate> dead_cells_to_revive = new ArrayList<Coordinate>(); // these cells have exactly 3 neighbors, bring them back to life
+            Set<Coordinate> cells_to_kill = new HashSet<Coordinate>(); // kill these cells
+            Set<Coordinate> dead_cells_to_revive = new HashSet<Coordinate>(); // these cells have exactly 3 neighbors, bring them back to life
 
             // iterate through each living cell
             for (Coordinate coordinate: board.alive.keySet()){
@@ -97,7 +97,7 @@ public class Game extends Thread{
                     // go through each neighbor, figure out which dead one can be revived
 
                     ArrayList<Coordinate> neighbors = getNeighbors(coordinate);
-                    
+
                     // neighbors: ArrayList of neighbors, shown in Coordinate objects
                     for (Coordinate neighbor: neighbors) {
                         
@@ -108,7 +108,6 @@ public class Game extends Thread{
                             boolean revive_dead_cell = deadCellState(board, neighbor);
 
                             if (revive_dead_cell) {
-                                System.out.println("reviving " + neighbor.x + ", " + neighbor.y + "...");
                                 dead_cells_to_revive.add(neighbor);
                             }
                         }
@@ -116,7 +115,6 @@ public class Game extends Thread{
                 }
 
                 else { // state = false => kill cell
-                    System.out.println("Killing cell at " + coordinate.x + ", " + coordinate.y);
                     cells_to_kill.add(coordinate); // kill cell
                 }
             }
@@ -126,18 +124,10 @@ public class Game extends Thread{
                 Button button = board.alive.get(coord);
 
                 board.killCell(coord, button);
-
-                System.out.println("Killed cell at " + coord.x + ", " + coord.y);
             }
 
             for (Coordinate coord: dead_cells_to_revive) {
                 Button button = board.dead.get(coord);
-
-                System.out.println("Trying to revive dead cell " + coord.x + ", " + coord.y);
-
-                if (button == null) {
-                    System.out.println("button for " + coord.x + ", " + coord.y + " is null.");
-                }
 
                 board.createCell(coord, button);
             }

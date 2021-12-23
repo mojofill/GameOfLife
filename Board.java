@@ -14,15 +14,15 @@ public class Board extends JPanel{
     public Board() {
         this.setBackground(Color.BLACK);
         
-        this.setLayout(new GridLayout(10, 10));
+        this.setLayout(new FlowLayout(FlowLayout.CENTER, 2, 2));
 
         // ORIGIN POINT - (0, 0)
 
-        for (int y = 0; y < 12; y++) {
-            for (int x = 0; x < 12; x++) {
+        for (int y = 0; y < 600 / 25; y++) {
+            for (int x = 0; x < 900 / 25; x++) {
                 Button BlackButton = new Button(x, y, this);
                 
-                BlackButton.setPreferredSize(new Dimension(50, 50));
+                BlackButton.setPreferredSize(new Dimension(23, 23));
                 
                 BlackButton.setBackground(Color.BLACK);
 
@@ -52,6 +52,8 @@ public class Board extends JPanel{
     }
 
     public void StartLoop(Game GAME) {
+        if (this.simulation_started) return;
+        
         this.simulation_started = true;
         
         GAME.start();
